@@ -29,8 +29,9 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"pages"
-	"worker"
+
+	"git.ameoto.com/thetooth/thetooth.name/pages"
+	"git.ameoto.com/thetooth/thetooth.name/worker"
 )
 
 func main() {

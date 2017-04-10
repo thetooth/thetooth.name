@@ -38,7 +38,8 @@ import (
 	"sort"
 	"strconv"
 	"text/template"
-	"worker"
+
+	"git.ameoto.com/thetooth/thetooth.name/worker"
 )
 
 // Handler type
@@ -130,7 +131,7 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 	for _, v := range fi {
 		if !v.IsDir() {
 			switch path.Ext(v.Name()) {
-			case ".jpg", ".jpeg", ".png", ".gif":
+			case ".jpg", ".jpeg", ".png", ".gif", ".webm":
 				filteredFileList = append(filteredFileList, v)
 				p.GalleryInfo.Size++
 				break

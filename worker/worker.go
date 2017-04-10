@@ -13,6 +13,8 @@ import (
 	"sync"
 	"time"
 
+	"golang.org/x/image/vp8"
+
 	"github.com/nfnt/resize"
 )
 
@@ -120,6 +122,10 @@ func (w Worker) Start() {
 				case ".gif":
 					source, err = gif.Decode(file)
 					break
+				case ".webm":
+					dec := vp8.NewDecoder()
+					dec.Init(file, 1024768)
+					source, err = dec.DecodeFrame()
 				default:
 					err = errors.New("Invalid format " + path.Ext(work.Src))
 				}

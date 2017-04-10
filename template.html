@@ -1,111 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<title>{{.Title}}</title>
-<meta name="description" content="">
-<meta name="viewport" content="width=device-width">
-<link rel="stylesheet" href="static/style.css" />
-<link rel="stylesheet" href="static/highlight.js/styles/ascetic.css" />
-<script type="text/javascript" src="static/highlight.js/highlight.pack.js"></script>
-<script type="text/javascript">
-hljs.initHighlightingOnLoad();
-function toggle_visibility(id) {
-	var e = document.getElementById(id);
-	if(e.style.display == 'block'){
-		e.style.display = 'none';
-	}else{
-		e.style.display = 'block';
-	}
-}
-function getUrlVars() {
-    var vars = {};
-    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+  <meta charset="utf-8">
+  <title>{{.Title}}</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="static/style.css" />
+  <link rel="stylesheet" href="static/highlight.js/styles/ascetic.css" />
+  <script type="text/javascript" src="static/highlight.js/highlight.pack.js"></script>
+  <script type="text/javascript">
+    hljs.initHighlightingOnLoad();
+
+    function toggle_visibility(id) {
+      var e = document.getElementById(id);
+      if (e.style.display == 'block') {
+        e.style.display = 'none';
+      } else {
+        e.style.display = 'block';
+      }
+    }
+
+    function getUrlVars() {
+      var vars = {};
+      var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
         vars[key] = value;
-    });
-    return vars;
-}
-window.onload = function(){
-	if(typeof getUrlVars()["offset"] !== 'undefined'){
-		toggle_visibility('gallery');
-	}
-}
-</script>
+      });
+      return vars;
+    }
+    window.onload = function () {
+      if (typeof getUrlVars()["offset"] !== 'undefined') {
+        toggle_visibility('gallery');
+      }
+    }
+  </script>
 </head>
 
 <body>
-<div id="content"><span class="secret"><a href="#" onclick="toggle_visibility('gallery');"><span class="warning"><strong>STOP</strong><br />
-  You have found the image gallery, it may or may not contain NSFW content.</span></a></span>
-  <h1 class="title"><a class="titleLink" href="/">{{.Title}}</a></h1>
-  <p>Mr Jeffrey A Jenner, R&amp;D Dept. <strong><a href="https://ameoto.com/">Ameoto Systems Inc.</a></strong> </p>
-  <p class="tiles"><a href="mailto:thetooth@ameoto.com">Contact</a><a href="http://www.linkedin.com/pub/jeff-jenner/49/397/850" style="border-color:#0077B5">LinkedIn</a><a href="http://www.youtube.com/user/thetooth54" style="border-color:#d02525">YouTube</a></p>
-  <a href="http://thetooth.deviantart.com/art/Cat-287616039"><img src="/static/splash.jpg" class="splash" alt="Picture of a cat longing for death"></a>
-  <div id="blog">
-  <div id="gallery" style="display:none">
-    <h1>Gallery</h1>
-    {{with .Gallery}}
-    {{range .}}
-    {{if .Valid}} <a class="thumb" href="images/{{.ImageSrc}}" style="background-image:url('images/thumbs/{{.Image}}')">&nbsp;</a> {{end}}{{end}}{{end}}
-    {{with .GalleryInfo}}
-    <p class="pagination"><span class="current">{{.Size}} items</span><span class="current">Page {{.Index}} of {{.IndexMax}}</span>{{.ListPages}}</p>
-    {{end}} </div>
-    <h1><a id="network"></a># SOHO Network</h1>
-    <h2>Outline</h2>
-    <p>So in preparation for moving into our new office/house I've been tasked with designing and implementing a network that can function as both a secure business LAN and a private end point for users.</p>
-    <p>The biggest challenge was finding a way to securely deal with multiple networks and services while keeping costs minimal and avoiding purchasing additional equipment. We could have easily gone with customer supplied gateways into a concentrator as local ISP's allow multiple PPPoE logins over a single link. But since we have HFC available I wanted to try a more elegant solution.</p>
-    <h2>Requirements</h2>
-    <p>Besides basic Internet connectivity here is a list of services customers might require:</p>
-    <ul>
-      <li>Telephony</li>
-      <li>Wireless, Guest WiFi</li>
-      <li>Secure separation of business resources from personal networks</li>
-      <li>High speed inside-out access for services, aka loop-back</li>
-    </ul>
-    <p>The decision to go with HFC means telephony must travel over IP or there is no cost savings to using cable. This means we must also become the telco for land-line services. VoIP has several advantages to using POTS, namely significant savings in line rental(As of writing this article the cost per line for direct PSTN access is 4 times the cost of using a remote trunking service), however it is at the expense of increased management and creating a single point of failure.</p>
-    <p>Care must also be taken to ensure the arrangement meets and exceeds the users demands and expectations of the service and to not encumber access to any functionality otherwise available.</p>
-    <h2>Implementation</h2>
-  <p style="text-align:center"><img src="https://thetooth.name/images/Network-Physical.png"  alt=""/><br>
-    <span style="color: #999999; font-size: x-small;">Fig 1 - Topkek Topology</span> </p>
-  <p>Above shows the pseudo layout at the L2 level. Separation is handled via VLAN's naturally, wireless separation is done through DD-WRT bridges, see: <a href="http://www.dd-wrt.com/wiki/index.php/VLAN_Detached_Networks_each_with_Wireless_and_Internet">VLAN Detached Networks</a>. Phones are locked to ports and ignore broadcast, a change of MAC on one of these ports will immediately disable it until the original device is restored, as a further measure SNMP trap events are sent the moment one of these ports are down. A 'General' port is used between the router and switch to prevent iSCSI traffic (several Gbps) from flooding the router. Only Virtual Machines assigned with an appropriate virtual adapter have access to private networks, VLAN tagging is done by the hypervisor and not by the VM's.</p>
-  <p>As far as hardware is concerned, the backbone of the network consists of a <a href="http://www.dell.com/au/business/p/powerconnect-5500-series/pd">Dell PowerConnect 5524</a> with battery backup, this Layer 2 switch handles most of the security enforcement. For routing we have a <a href="http://www.juniper.net/au/en/products-services/security/srx-series/srx210/">Juniper SRX210HE</a>, this is in charge of providing the zone based firewall, NAT, DHCPv4, SLAAC, 6in4 tunneling and sFlow for monitoring.</p>
-  <p>An out of band switch connects IPMI, SNMP and various management interfaces together and can only be accessed physically from the rack or by administrators over VPN.</p>
-  <h3>Layer 3</h3>
-  <p><span style="color: #000000">VLAN100</span> is confined to the Guest zone, it has an independent firewall and security policies from the main public network, this interface is rate limited to prevent DoS and penetration attempts from Guest to Trust via the internal data plane. Customer VLANs are a mirror image of this.</p>
-  <p><span style="color: #0070C0">VLAN1</span> and <span style="color: #F59D56">2</span>, which is part of the Trust zone consists of a IPv4 inbound services policy and respective NAT, IPv6 uses a per server policy set. Inter-VLAN routing is provided for 1&lt;-&gt;2 access on a case by case basis through the firewall:</p>
-  <pre>from-zone untrust to-zone trust {<br>    policy trust-services {<br>        match {<br>            source-address any-ipv4;<br>            destination-address any-ipv4;<br>            application [ junos-http junos-https junos-sip junos-ping softether junos-ssh ];<br>        }<br>        then {<br>            permit;<br>        }<br>    }<br>    policy icmp-v6 {<br>        match {<br>            source-address any-ipv6;<br>            destination-address any-ipv6;<br>            application junos-icmp6-all;<br>        }<br>        then {<br>            permit;<br>        }<br>    }<br>    policy trust-services-2001_470_24_869_1 {<br>        match {<br>            source-address any-ipv6;<br>            destination-address Vincent;<br>            application [ junos-http junos-ssh ];<br>        }<br>        then {<br>            permit;<br>        }<br>    }                                   <br>}</pre>
-  <p><span style="color: #9DBB61">VLAN3</span> carries only VoIP traffic.</p>
-  <p>Lastly the usual barrage of DoS and brute force attacks from the Internet are dealt with using a screening filter. RPF is enabled on all interfaces with an exception for DHCPv4 broadcasts.</p>
-  <h3>Telephony</h3>
-  <p>A PBX server running FreePBX is used for routing VoIP, everything is SIP end to end until it reaches the PSTN, CoS means little to no latency and no dropped calls, I've tested this extensively on ADSL2+ and even on a problematic line voice is clear and reliable.</p>
-  <p>Customers are provided with DID(s) at a monthly rate with call excess added on, free voicemail is also available. In the next few weeks I'll write a script to pull CDR from FreePBX and automatically generate invoices, but since there will only be two users initially this is low priority. I'm also considering switching to sipXecs, but it is less supported and will need to be tested extensively.</p>
-  <h3>CoS/QoS</h3>
-  <p>All WAN bound traffic is classified by a rule set, based on the originating zone and type of traffic we can assign packets to an appropriate queue on the egress interface. The switch also prioritizes VLAN3's traffic to insure large LAN transactions like those created by SMB do not affect voice quality.</p>
-  <h3>Remote Access and Authentication</h3>
-  <p>VPN is provided using SoftEther VPN Server, the built in access lists can be assigned to RADIUS accounts allowing the single server instance to provide access to all or some networks.  </p>
-  <p>We use RADIUS where possible for unified sign on, this is managed by the local Active Directory server which of course machines must join before they can access anything interesting.</p>
-  <h2>Conclusion</h2>
-  <p style="text-align:center">¯\_(ツ)_/¯<br>
-    <span style="color: #999999; font-size: x-small;">Fig 2 - Me as a sysadmin</span></p>
-  <p>Besides software configuration we're also moving to a much larger rack (18U -&gt; 40U) and as such need to re-cable everything. It will be nice to have room for cable management and a rack thats properly setup to handle it.</p>
-  <p>In time I will write some tutorials on JunOS and other network technologies as I'm still learning myself.</p>
-    <h1><a id="iced_coffee"></a># Perfect Iced Coffee</h1>
-    <p>Makes 2 Liters.</p>
-    <h2>Ingredients</h2>
-    <ul>
-      <li>Instant Coffee 60 cm<sup>3</sup> </li>
-      <li>White Sugar 120 cm<sup>3</sup> </li>
-      <li>Water (+85 +100&deg; C) 500 mL </li>
-      <li>Water (-20 +4&deg; C) 500 mL </li>
-      <li>Milk (+4&deg; C) 1 L</li>
-    </ul>
-    <h2>Method</h2>
-    <p>Mix coffee, sugar and hot water together until sugar grains saturate. Recommended baking time is 60-90 seconds at +85&deg; C.</p>
-    <blockquote>
-      <p>Extreme care should be taken to insure water does not exceed +100&deg; C or it will become highly volatile when exposed to contaminants.</p>
-    </blockquote>
-    <p>Add childed or ice water and mix completely, refrigerated further if temperature exceeds +4&deg; C. Finally add Milk and mix completely.</p>
-  </div>
+  <div id="content"><span class="secret"><a href="#" onclick="toggle_visibility('gallery');"><span class="warning"><strong>STOP</strong><br />
+  You have found the image gallery, it may or may not contain NSFW content.</span></a>
+    </span>
+    <h1 class="title"><a class="titleLink" href="/">{{.Title}}</a></h1>
+    <p>Mr Jeffrey A Jenner, R&amp;D Dept. <strong><a href="https://ameoto.com/">Ameoto Systems Inc.</a></strong> </p>
+    <p class="tiles"><a href="mailto:thetooth@ameoto.com">Contact</a><a href="http://www.linkedin.com/pub/jeff-jenner/49/397/850" style="border-color:#0077B5">LinkedIn</a>
+      <a
+        href="http://www.youtube.com/user/thetooth54" style="border-color:#d02525">YouTube</a>
+    </p>
+    <a href="http://thetooth.deviantart.com/art/Cat-287616039"><img src="/static/splash.jpg" class="splash" alt="Picture of a cat longing for death"></a>
+    <div id="blog">
+      <div id="gallery" style="display:none">
+        <h1>Gallery</h1>
+        {{with .Gallery}} {{range .}} {{if .Valid}} <a class="thumb" href="images/{{.ImageSrc}}" style="background-image:url('images/thumbs/{{.Image}}')">&nbsp;</a>        {{end}}{{end}}{{end}} {{with .GalleryInfo}}
+        <p class="pagination"><span class="current">{{.Size}} items</span><span class="current">Page {{.Index}} of {{.IndexMax}}</span>{{.ListPages}}</p>
+        {{end}} </div>
 
-</div>
+      <h1>
+        <a id="st-link"></a># ST Link V2 Upgrade</h1>
+      <p style="text-align:center">
+        <a <a href="https://thetooth.name/images/IMG_5773s.jpg"><img src="https://thetooth.name/images/IMG_5773s.jpg" alt="" width="600px"></a><br>
+        <span style="color: #999999; font-size: x-small;">Fig 1 - Modified PCB</span> </p>
+      <h2>Intro</h2>
+      <p>ST put out a video ages ago showing some mods to their low cost debugger. They added some LEDs and a 5V output, not
+        very useful. Here's some tips for turning your ST Link into a general purpose ARM debugger while still maintaining
+        the original looks and function of the device.</p>
+      <p>To get the new functionality, we need to flash the debugger itself with new firmware. An open source project call
+        <a
+          href="https://github.com/blacksphere/blackmagic/wiki">Black Magic Probe</a> exists which gives us a choice between SWD or JTAG, no need to install drivers(BMP is a standard
+          serial device!), painless build and reload workflow on linux and optionally UART.</p>
+      <h2>Prerequisites</h2>
+      <ul>
+        <li>ST Link V2 debugger</li>
+        <li>Another ST Link or a discovery board</li>
+        <li>Soldering iron and enameled wire</li>
+        <li>A working ARM GCC install</li>
+        <li>Various other linux command line tools that are unavailable on your distro or fail to build just for you</li>
+      </ul>
+      <h2>Building</h2>
+      <p>Luckily the BMP firmware has few dependencies and the ones it has are submodules with the make file doing all the work
+        (´ ・ω・` )</p>
+      <pre>git clone git@github.com:blacksphere/blackmagic.git
+cd blackmagic
+git submodule init
+git submodule update
+make
+cd src
+make clean
+make PROBE_HOST=stlink</pre>
+      <p>You shouldn't get any warnings or errors and have two new files: blackmagic.bin and blackmagic_dfu.bin</p>
+      <h2>ST Link V2 SWD header</h2>
+      <p>You'll want to solder a header to CN1 on your target debugger, the pin out is provided below.</p>
+      <p style="text-align:center"><img src="https://thetooth.name/images/stlink/cn1.jpg" alt=""><br>
+        <span style="color: #999999; font-size: x-small;">Fig 2 - CN1 Header</span> </p>
+      <p>Now connect the two debuggers together.</p>
+      <h2>Flashing</h2>
+      <p>To flash we need to use either the official ST tool or a combination of <a href="https://github.com/texane/stlink">texane stlink util</a>        to do a full erase and <a href="http://openocd.org/">OpenOCD</a> to unlock the flash region. Neither of these tools
+        will be used after flashing is complete.</p>
+      <pre>openocd -f interface/stlink-v2.cfg -f target/stm32f1x_stlink.cfg -c "init" -c "halt" -c "stm32f1x unlock 0" -c "shutdown"
+st-flash erase
+st-flash --reset write blackmagic.bin 0x8002000
+st-flash write blackmagic_dfu.bin 0x8000000</pre>
+      <p>If any of the flashing steps fails, remember we don't have a NRST signal so you'll need to manually reset the device.</p>
+      <p>If all went well you can now connect the debugger via USB and you'll see two new devices under /dev/. The first is
+        the debug target itself, the second is a serial port we can use to communicate with the target.</p>
+      <p style="text-align:center"><img src="http://www.waveshare.com/img/devkit/general/connector-layout-20pin_h220.jpg" alt=""><br>
+        <span style="color: #999999; font-size: x-small;">Fig 3 - Debug Header</span> </p>
+      <p>The debugger pin out remains the same as the original however the bottom row except pin 2 are connected to ground.
+        Next we'll make 6 and 4 actually function as UART (　´_ゝ`)</p>
+      <h2>Adding UART</h2>
+      <p>Take a knife to the back of the PCB, cutting the connection from the ground plane to pins 6 and 4.</p>
+      <p style="text-align:center"><img src="https://thetooth.name/images/stlink/uart.jpg" alt=""><br>
+        <span style="color: #999999; font-size: x-small;">Fig 4 - UART</span> </p>
+      <p>Run two wires from U1 pin 12 and 13 to 6 and 4 respectively.</p>
+      <p style="text-align:center"><img src="https://thetooth.name/images/stlink/uart2.jpg" alt=""><br>
+        <span style="color: #999999; font-size: x-small;">Fig 5 - Don't burn your fingers</span> </p>
+      <p>Try not to forget this is a direct CPU connection so RS232 will almost certainly not work.</p>
+      <p>Congratulations you now have a self contained debugger and serial port that will work with a heap of different ARM
+        platforms.</p>
+      <h3>References</h3>
+      <ul>
+        <li>https://github.com/blacksphere/blackmagic/wiki</li>
+        <li>https://wiki.paparazziuav.org/wiki/STLink</li>
+        <li>http://www.st.com/resource/en/datasheet/stm32f405og.pdf</li>
+        <li>http://www.st.com/resource/en/datasheet/stm32f103tb.pdf</li>
+      </ul>
+
+      <h1>
+        <a id="network"></a># SOHO Network</h1>
+      <h2>Outline</h2>
+      <p>So in preparation for moving into our new office/house I've been tasked with designing and implementing a network that
+        can function as both a secure business LAN and a private end point for users.</p>
+      <p>The biggest challenge was finding a way to securely deal with multiple networks and services while keeping costs minimal
+        and avoiding purchasing additional equipment. We could have easily gone with customer supplied gateways into a concentrator
+        as local ISP's allow multiple PPPoE logins over a single link. But since we have HFC available I wanted to try a
+        more elegant solution.</p>
+      <h2>Requirements</h2>
+      <p>Besides basic Internet connectivity here is a list of services customers might require:</p>
+      <ul>
+        <li>Telephony</li>
+        <li>Wireless, Guest WiFi</li>
+        <li>Secure separation of business resources from personal networks</li>
+        <li>High speed inside-out access for services, aka loop-back</li>
+      </ul>
+      <p>The decision to go with HFC means telephony must travel over IP or there is no cost savings to using cable. This means
+        we must also become the telco for land-line services. VoIP has several advantages to using POTS, namely significant
+        savings in line rental(As of writing this article the cost per line for direct PSTN access is 4 times the cost of
+        using a remote trunking service), however it is at the expense of increased management and creating a single point
+        of failure.</p>
+      <p>Care must also be taken to ensure the arrangement meets and exceeds the users demands and expectations of the service
+        and to not encumber access to any functionality otherwise available.</p>
+      <h2>Implementation</h2>
+      <p style="text-align:center"><img src="https://thetooth.name/images/Network-Physical.png" alt="" /><br>
+        <span style="color: #999999; font-size: x-small;">Fig 1 - Topkek Topology</span> </p>
+      <p>Above shows the pseudo layout at the L2 level. Separation is handled via VLAN's naturally, wireless separation is done
+        through DD-WRT bridges, see: <a href="http://www.dd-wrt.com/wiki/index.php/VLAN_Detached_Networks_each_with_Wireless_and_Internet">VLAN Detached Networks</a>.
+        Phones are locked to ports and ignore broadcast, a change of MAC on one of these ports will immediately disable it
+        until the original device is restored, as a further measure SNMP trap events are sent the moment one of these ports
+        are down. A 'General' port is used between the router and switch to prevent iSCSI traffic (several Gbps) from flooding
+        the router. Only Virtual Machines assigned with an appropriate virtual adapter have access to private networks, VLAN
+        tagging is done by the hypervisor and not by the VM's.</p>
+      <p>As far as hardware is concerned, the backbone of the network consists of a <a href="http://www.dell.com/au/business/p/powerconnect-5500-series/pd">Dell PowerConnect 5524</a>        with battery backup, this Layer 2 switch handles most of the security enforcement. For routing we have a <a href="http://www.juniper.net/au/en/products-services/security/srx-series/srx210/">Juniper SRX210HE</a>,
+        this is in charge of providing the zone based firewall, NAT, DHCPv4, SLAAC, 6in4 tunneling and sFlow for monitoring.</p>
+      <p>An out of band switch connects IPMI, SNMP and various management interfaces together and can only be accessed physically
+        from the rack or by administrators over VPN.</p>
+      <h3>Layer 3</h3>
+      <p><span style="color: #000000">VLAN100</span> is confined to the Guest zone, it has an independent firewall and security
+        policies from the main public network, this interface is rate limited to prevent DoS and penetration attempts from
+        Guest to Trust via the internal data plane. Customer VLANs are a mirror image of this.</p>
+      <p><span style="color: #0070C0">VLAN1</span> and <span style="color: #F59D56">2</span>, which is part of the Trust zone
+        consists of a IPv4 inbound services policy and respective NAT, IPv6 uses a per server policy set. Inter-VLAN routing
+        is provided for 1&lt;-&gt;2 access on a case by case basis through the firewall:</p>
+      <pre>from-zone untrust to-zone trust {<br>    policy trust-services {<br>        match {<br>            source-address any-ipv4;<br>            destination-address any-ipv4;<br>            application [ junos-http junos-https junos-sip junos-ping softether junos-ssh ];<br>        }<br>        then {<br>            permit;<br>        }<br>    }<br>    policy icmp-v6 {<br>        match {<br>            source-address any-ipv6;<br>            destination-address any-ipv6;<br>            application junos-icmp6-all;<br>        }<br>        then {<br>            permit;<br>        }<br>    }<br>    policy trust-services-2001_470_24_869_1 {<br>        match {<br>            source-address any-ipv6;<br>            destination-address Vincent;<br>            application [ junos-http junos-ssh ];<br>        }<br>        then {<br>            permit;<br>        }<br>    }                                   <br>}</pre>
+      <p><span style="color: #9DBB61">VLAN3</span> carries only VoIP traffic.</p>
+      <p>Lastly the usual barrage of DoS and brute force attacks from the Internet are dealt with using a screening filter.
+        RPF is enabled on all interfaces with an exception for DHCPv4 broadcasts.</p>
+      <h3>Telephony</h3>
+      <p>A PBX server running FreePBX is used for routing VoIP, everything is SIP end to end until it reaches the PSTN, CoS
+        means little to no latency and no dropped calls, I've tested this extensively on ADSL2+ and even on a problematic
+        line voice is clear and reliable.</p>
+      <p>Customers are provided with DID(s) at a monthly rate with call excess added on, free voicemail is also available. In
+        the next few weeks I'll write a script to pull CDR from FreePBX and automatically generate invoices, but since there
+        will only be two users initially this is low priority. I'm also considering switching to sipXecs, but it is less
+        supported and will need to be tested extensively.</p>
+      <h3>CoS/QoS</h3>
+      <p>All WAN bound traffic is classified by a rule set, based on the originating zone and type of traffic we can assign
+        packets to an appropriate queue on the egress interface. The switch also prioritizes VLAN3's traffic to insure large
+        LAN transactions like those created by SMB do not affect voice quality.</p>
+      <h3>Remote Access and Authentication</h3>
+      <p>VPN is provided using SoftEther VPN Server, the built in access lists can be assigned to RADIUS accounts allowing the
+        single server instance to provide access to all or some networks. </p>
+      <p>We use RADIUS where possible for unified sign on, this is managed by the local Active Directory server which of course
+        machines must join before they can access anything interesting.</p>
+      <h2>Conclusion</h2>
+      <p style="text-align:center">¯\_(ツ)_/¯<br>
+        <span style="color: #999999; font-size: x-small;">Fig 2 - Me as a sysadmin</span></p>
+      <p>Besides software configuration we're also moving to a much larger rack (18U -&gt; 40U) and as such need to re-cable
+        everything. It will be nice to have room for cable management and a rack thats properly setup to handle it.</p>
+      <p>In time I will write some tutorials on JunOS and other network technologies as I'm still learning myself.</p>
+      <h1>
+        <a id="iced_coffee"></a># Perfect Iced Coffee</h1>
+      <p>Makes 2 Liters.</p>
+      <h2>Ingredients</h2>
+      <ul>
+        <li>Instant Coffee 60 cm<sup>3</sup> </li>
+        <li>White Sugar 120 cm<sup>3</sup> </li>
+        <li>Water (+85 +100&deg; C) 500 mL </li>
+        <li>Water (-20 +4&deg; C) 500 mL </li>
+        <li>Milk (+4&deg; C) 1 L</li>
+      </ul>
+      <h2>Method</h2>
+      <p>Mix coffee, sugar and hot water together until sugar grains saturate. Recommended baking time is 60-90 seconds at +85&deg;
+        C.</p>
+      <blockquote>
+        <p>Extreme care should be taken to insure water does not exceed +100&deg; C or it will become highly volatile when exposed
+          to contaminants.</p>
+      </blockquote>
+      <p>Add childed or ice water and mix completely, refrigerated further if temperature exceeds +4&deg; C. Finally add Milk
+        and mix completely.</p>
+    </div>
+
+  </div>
 </body>
+
 </html>
