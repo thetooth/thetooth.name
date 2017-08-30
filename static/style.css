@@ -5,10 +5,12 @@ body {
 	color: #464646;
 	font-weight: 300;
 }
+
 footer {
 	font-size: 1.1em;
 	color: #333;
 }
+
 #status {
 	display: none;
 	background-color: #FEE9CC;
@@ -22,35 +24,42 @@ footer {
 	padding-right: 4px;
 	padding-left: 4px;
 }
+
 #content {
-	width: 800px;
+	width: 250mm;
 	margin-right: auto;
 	margin-left: auto;
 	margin-top: 30px;
 	margin-bottom: 30px;
 }
+
 #content table .header {
 	font-size: 1.2em;
 	line-height: 1.5em;
 }
+
 #content table textarea {
 	font-size: 1.2em;
 	min-height: 240px;
 	width: 99%;
 	outline: none;
 }
+
 #content table textarea:focus {
 	background-color: #FFF!important;
 }
+
 #content table .edit textarea {
 	background-color: #F9F9F9;
 	border: none;
 }
+
 #content table .noedit textarea {
 	background-color: #F2F2F2;
 	border: none;
 	color: #666;
 }
+
 #content h1 {
 	font-size: 2.3em;
 	font-family: 'Monda', Helvetica, Arial, sans-serif;
@@ -59,6 +68,7 @@ footer {
 	padding-bottom: 16px;
 	color: #222;
 }
+
 #content .title {
 	background-color: #080816;
 	color: #97CEEC;
@@ -68,36 +78,45 @@ footer {
 	padding-right: 8px;
 	padding-bottom: inherit;
 }
+
 #content .titleLink {
 	color: #97CEEC;
 }
+
 #content .titleLink:hover {
 	text-shadow: 0px 0px 40px #97CEEC;
 }
+
 #content .sub {
 	display: inline-block;
 	background-color: #0077B5;
 	padding-left: 8px;
 	padding-right: 8px;
 }
+
 #content .sub a {
 	color: #F0F0F0;
-	font-weight:bold;
+	font-weight: bold;
 }
+
 #content .sub a:hover {
 	color: #FFF;
 }
+
 blockquote {
 	border-left: 1px solid #e5e5e5;
 	margin: 0;
 	padding: 0 0 0 20px;
 	font-style: italic;
 }
-code, pre {
+
+code,
+pre {
 	font-family: 'Source Code Pro', Monaco, Bitstream Vera Sans Mono, Lucida Console, Terminal;
 	color: #333;
 	font-size: 12px;
 }
+
 pre {
 	padding: 8px 15px;
 	background: #f8f8f8;
@@ -105,6 +124,7 @@ pre {
 	border: 1px solid #e5e5e5;
 	overflow-x: auto;
 }
+
 .thumb {
 	background-color: #F6F6F6;
 	display: inline-block;
@@ -119,10 +139,12 @@ pre {
 	margin-bottom: 4px;
 	margin-left: 0px;
 }
+
 .thumb:hover {
 	background-color: #FFF;
 	border: 1px solid #97CEEC;
 }
+
 .thumb img {
 	display: inline-block;
 	vertical-align: middle;
@@ -130,31 +152,39 @@ pre {
 	max-width: 96px;
 	border: none;
 }
-.thumb img:hover {
-}
+
+.thumb img:hover {}
+
 .pagination {
 	text-align: left;
 	font-size: x-small;
 }
-.pagination a, .current {
+
+.pagination a,
+.current {
 	border: 1px solid #E5E5E5;
 	margin-right: 2px;
 	padding: 2px 4px 2px 4px;
 	text-decoration: none;
 }
+
 .pagination a:hover {
 	border: 1px solid #97CEEC;
 }
+
 #content a {
 	text-decoration: none;
 	color: #181845;
 }
+
 #content a:hover {
 	color: #97CEEC;
 }
+
 .secret {
 	float: right;
 }
+
 .secret a {
 	background-color: #F8F8F8;
 	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARAQMAAAABo9W5AAAAA3NCSVQICAjb4U/gAAAABlBMVEX///////9VfPVsAAAAAnRSTlP/AOW3MEoAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAcdEVYdFNvZnR3YXJlAEFkb2JlIEZpcmV3b3JrcyBDUzbovLKMAAAAF0lEQVQImWP4/7+BARn/s8eO0eWR9AAA3FMkVwd28ikAAAAASUVORK5CYII=');
@@ -166,9 +196,11 @@ pre {
 	font-size: 18px;
 	text-align: center;
 }
+
 .secret a:hover {
 	background-color: #E93028;
 }
+
 .warning {
 	display: none;
 	background-color: #E93028;
@@ -179,9 +211,11 @@ pre {
 	font-size: small;
 	padding: 2px;
 }
+
 .secret a:hover .warning {
 	display: inline-block;
 }
+
 .tiles a {
 	background-color: #F0F0F0;
 	padding: 8px;
@@ -189,18 +223,22 @@ pre {
 	margin-right: 4px;
 	border-bottom-width: 2px;
 	border-bottom-style: solid;
-	border-bottom-color: rgba(0,0,0,0.1);
+	border-bottom-color: rgba(0, 0, 0, 0.1);
 }
+
 .splash {
+	width: 250mm;
 	border-bottom-width: 4px;
 	border-bottom-style: solid;
-	border-bottom-color: rgba(0,0,0,0.1);
+	border-bottom-color: rgba(0, 0, 0, 0.1);
 }
-#blog h1 {
+
+#content section h1 {
 	display: block;
 	background-color: #02daaf;
 	color: #fff;
 	margin: 0;
+	margin-top: 3mm;
 	line-height: 32px;
 	padding-top: 0;
 	padding-bottom: 0;
@@ -210,7 +248,8 @@ pre {
 	border-bottom-color: #01BE98;
 	font-size: x-large;
 }
-blockquote{
+
+#content blockquote {
 	font-size: 12px;
 	font-weight: bold;
 }

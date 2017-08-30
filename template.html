@@ -37,23 +37,25 @@
 </head>
 
 <body>
-  <div id="content"><span class="secret"><a href="#" onclick="toggle_visibility('gallery');"><span class="warning"><strong>STOP</strong><br />
+  <div id="content">
+    <header><span class="secret"><a href="#" onclick="toggle_visibility('gallery');"><span class="warning"><strong>STOP</strong><br />
   You have found the image gallery, it may or may not contain NSFW content.</span></a>
-    </span>
-    <h1 class="title"><a class="titleLink" href="/">{{.Title}}</a></h1>
-    <p>Mr Jeffrey A Jenner, R&amp;D Dept. <strong><a href="https://ameoto.com/">Ameoto Systems Inc.</a></strong> </p>
-    <p class="tiles"><a href="mailto:thetooth@ameoto.com">Contact</a><a href="http://www.linkedin.com/pub/jeff-jenner/49/397/850" style="border-color:#0077B5">LinkedIn</a>
-      <a
-        href="http://www.youtube.com/user/thetooth54" style="border-color:#d02525">YouTube</a>
-    </p>
-    <a href="http://thetooth.deviantart.com/art/Cat-287616039"><img src="/static/splash.jpg" class="splash" alt="Picture of a cat longing for death"></a>
-    <div id="blog">
+      </span>
+      <h1 class="title"><a class="titleLink" href="/">{{.Title}}</a></h1>
+      <p>Mr Jeffrey A Jenner, R&amp;D Dept. <strong><a href="https://ameoto.com/">Ameoto Systems Inc.</a></strong> </p>
+      <p class="tiles"><a href="mailto:thetooth@ameoto.com">Contact</a><a href="http://www.linkedin.com/pub/jeff-jenner/49/397/850" style="border-color:#0077B5">LinkedIn</a>
+        <a href="http://www.youtube.com/user/thetooth54" style="border-color:#d02525">YouTube</a>
+      </p>
+      <img src="/static/splash.jpg" class="splash">
+
       <div id="gallery" style="display:none">
         <h1>Gallery</h1>
         {{with .Gallery}} {{range .}} {{if .Valid}} <a class="thumb" href="images/{{.Src}}" style="background-image:url('images/thumbs/{{.Thumb}}')">&nbsp;</a>        {{end}}{{end}}{{end}} {{with .Pagination}}
         <p class="pagination"><span class="current">{{.Size}} items</span><span class="current">Page {{.Index}} of {{.End}}</span>{{.ListPages}}</p>
         {{end}} </div>
 
+    </header>
+    <section>
       <h1>
         <a id="st-link"></a># ST Link V2 Upgrade</h1>
       <p style="text-align:center">
@@ -64,9 +66,9 @@
         very useful. Here's some tips for turning your ST Link into a general purpose ARM debugger while still maintaining
         the original looks and function of the device.</p>
       <p>To get the new functionality, we need to flash the debugger itself with new firmware. An open source project call
-        <a
-          href="https://github.com/blacksphere/blackmagic/wiki">Black Magic Probe</a> exists which gives us a choice between SWD or JTAG, no need to install drivers(BMP is a standard
-          serial device!), painless build and reload workflow on linux and optionally UART.</p>
+        <a href="https://github.com/blacksphere/blackmagic/wiki">Black Magic Probe</a> exists which gives us a choice between
+        SWD or JTAG, no need to install drivers(BMP is a standard serial device!), painless build and reload workflow on
+        linux and optionally UART.</p>
       <h2>Prerequisites</h2>
       <ul>
         <li>ST Link V2 debugger</li>
@@ -115,7 +117,8 @@ st-flash write blackmagic_dfu.bin 0x8000000</pre>
         <span style="color: #999999; font-size: x-small;">Fig 5 - Don't burn your fingers</span> </p>
       <p>Try not to forget this is a direct CPU connection so RS232 will almost certainly not work.</p>
       <p>Congratulations you now have a self contained debugger and serial port that will work with a heap of different ARM
-        platforms.</p>
+        platforms.
+      </p>
       <h3>References</h3>
       <ul>
         <li>https://github.com/blacksphere/blackmagic/wiki</li>
@@ -209,15 +212,15 @@ st-flash write blackmagic_dfu.bin 0x8000000</pre>
       </ul>
       <h2>Method</h2>
       <p>Mix coffee, sugar and hot water together until sugar grains saturate. Recommended baking time is 60-90 seconds at +85&deg;
-        C.</p>
+        C.
+      </p>
       <blockquote>
         <p>Extreme care should be taken to insure water does not exceed +100&deg; C or it will become highly volatile when exposed
           to contaminants.</p>
       </blockquote>
       <p>Add childed or ice water and mix completely, refrigerated further if temperature exceeds +4&deg; C. Finally add Milk
         and mix completely.</p>
-    </div>
-
+    </section>
   </div>
 </body>
 
