@@ -50,8 +50,8 @@
     <div id="blog">
       <div id="gallery" style="display:none">
         <h1>Gallery</h1>
-        {{with .Gallery}} {{range .}} {{if .Valid}} <a class="thumb" href="images/{{.ImageSrc}}" style="background-image:url('images/thumbs/{{.Image}}')">&nbsp;</a>        {{end}}{{end}}{{end}} {{with .GalleryInfo}}
-        <p class="pagination"><span class="current">{{.Size}} items</span><span class="current">Page {{.Index}} of {{.IndexMax}}</span>{{.ListPages}}</p>
+        {{with .Gallery}} {{range .}} {{if .Valid}} <a class="thumb" href="images/{{.Src}}" style="background-image:url('images/thumbs/{{.Thumb}}')">&nbsp;</a>        {{end}}{{end}}{{end}} {{with .Pagination}}
+        <p class="pagination"><span class="current">{{.Size}} items</span><span class="current">Page {{.Index}} of {{.End}}</span>{{.ListPages}}</p>
         {{end}} </div>
 
       <h1>

@@ -30,7 +30,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"git.ameoto.com/thetooth/thetooth.name/pages"
+	"git.ameoto.com/thetooth/thetooth.name/handlers/home"
 	"git.ameoto.com/thetooth/thetooth.name/worker"
 )
 
@@ -41,7 +41,7 @@ func main() {
 	worker.StartDispatcher(4)
 
 	// Renderer
-	h := &pages.Handler{}
+	h := &home.Handler{}
 
 	// Create mux
 	mux := http.NewServeMux()

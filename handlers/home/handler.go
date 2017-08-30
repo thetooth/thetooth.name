@@ -1,4 +1,4 @@
-package pages
+package home
 
 /*
 	thetooth.name - Gallery and home page written in Go
@@ -30,7 +30,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math"
 	"net/http"
 	"net/url"
 	"os"
@@ -45,26 +44,26 @@ import (
 // Handler type
 type Handler struct{}
 
-// GalleryT type
-type GalleryT struct {
-	Image    string
-	ImageSrc string
-	Valid    bool
+// Image type
+type Image struct {
+	Thumb string
+	Src   string
+	Valid bool
 }
 
-// GalleryInfoT type
-type GalleryInfoT struct {
-	Size     int
-	Index    int
-	IndexMax int
+// Pagination type
+type Pagination struct {
+	Index int
+	End   int
+	Size  int
 }
 
 // Page type
 type Page struct {
-	Title       string
-	Debug       string
-	Gallery     []GalleryT
-	GalleryInfo GalleryInfoT
+	Title      string
+	Debug      string
+	Gallery    []Image
+	Pagination Pagination
 }
 
 type byModTime []os.FileInfo
@@ -74,28 +73,13 @@ func (f byModTime) Less(i, j int) bool { return f[i].ModTime().Unix() > f[j].Mod
 func (f byModTime) Swap(i, j int)      { f[i], f[j] = f[j], f[i] }
 
 // ListPages generates pagination
-func (g GalleryInfoT) ListPages() string {
+func (p Pagination) ListPages() string {
 	buff := ""
-	for i := 0; i < g.IndexMax; i++ {
-		buff = fmt.Sprintf("%s<a href=\"?offset=%d\">%d</a>", buff, i, i+1)
+	for i := 1; i < p.End; i++ {
+		buff = fmt.Sprintf("%s<a href=\"?offset=%d\">%d</a>", buff, i, i)
 	}
 	return buff
 }
-func min(x, y int) int {
-	if x > y {
-		return y
-	}
-	return x
-}
-
-func max(x, y int) int {
-	if x < y {
-		return y
-	}
-	return x
-}
-
-var itemsPerPage = 140
 
 // Satisfy http.Handler interface
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -133,21 +117,39 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 			switch path.Ext(v.Name()) {
 			case ".jpg", ".jpeg", ".png", ".gif", ".webm":
 				filteredFileList = append(filteredFileList, v)
-				p.GalleryInfo.Size++
 				break
 			}
 		}
 	}
 
-	rawIndex, _ := strconv.Atoi(r.URL.Query().Get("offset"))
-	maxIndex := int(math.Ceil((float64(len(filteredFileList)) / float64(itemsPerPage))))
-	absIndex := min(rawIndex, maxIndex-1) * itemsPerPage
+	var itemsPerPage = 140
 
-	pageList := filteredFileList[absIndex:(absIndex + min(itemsPerPage, len(filteredFileList[absIndex:])))]
+	// Get offset from query
+	offset, err := strconv.Atoi(r.URL.Query().Get("offset"))
+	if err != nil || offset < 1 {
+		offset = 1
+	}
 
-	p.GalleryInfo.Index = rawIndex + 1
-	p.GalleryInfo.IndexMax = maxIndex
-	p.Gallery = make([]GalleryT, len(pageList))
+	// FFL length
+	length := len(filteredFileList)
+
+	// Slice index A
+	index := (offset - 1) * itemsPerPage
+	if index > length {
+		http.Error(w, http.StatusText(http.StatusTeapot), http.StatusTeapot)
+		return
+	}
+	remaining := length - index
+
+	// Slice index B
+	end := min(index+itemsPerPage, remaining)
+
+	pageList := filteredFileList[index:end]
+
+	p.Pagination.Index = offset
+	p.Pagination.End = (length / itemsPerPage) + 1
+	p.Pagination.Size = length
+	p.Gallery = make([]Image, len(pageList))
 
 	for i, v := range pageList {
 		createThumbnail(p, i, v)
@@ -161,18 +163,32 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, p)
 }
 
-func createThumbnail(p *Page, i int, v os.FileInfo) {
-	resizeName := v.Name()[0:(len(v.Name())-len(path.Ext(v.Name())))] + ".png"
+func createThumbnail(p *Page, i int, f os.FileInfo) {
+	resizeName := f.Name()[:(len(f.Name())-len(path.Ext(f.Name())))] + ".png"
 
 	_, err := os.Stat(worker.ImageDir + "thumbs/" + resizeName)
 	if os.IsNotExist(err) {
-		p.Gallery[i] = GalleryT{"noimage.png", url.QueryEscape(v.Name()), true}
+		p.Gallery[i] = Image{"noimage.png", url.PathEscape(f.Name()), true}
 		work := worker.WorkRequest{
-			Src:   v.Name(),
+			Src:   f.Name(),
 			Thumb: resizeName,
 		}
 		worker.WorkQueue <- work
 	} else {
-		p.Gallery[i] = GalleryT{url.QueryEscape(resizeName), url.QueryEscape(v.Name()), true}
+		p.Gallery[i] = Image{url.PathEscape(resizeName), url.PathEscape(f.Name()), true}
 	}
+}
+
+func min(x, y int) int {
+	if x > y {
+		return y
+	}
+	return x
+}
+
+func max(x, y int) int {
+	if x < y {
+		return y
+	}
+	return x
 }
