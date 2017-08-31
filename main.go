@@ -30,8 +30,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"git.ameoto.com/thetooth/thetooth.name/handlers/home"
-	"git.ameoto.com/thetooth/thetooth.name/worker"
+	"github.com/thetooth/thetooth.name/handlers/home"
+	"github.com/thetooth/thetooth.name/worker"
 )
 
 func main() {

@@ -38,7 +38,7 @@ import (
 	"strconv"
 	"text/template"
 
-	"git.ameoto.com/thetooth/thetooth.name/worker"
+	"github.com/thetooth/thetooth.name/worker"
 )
 
 // Handler type
