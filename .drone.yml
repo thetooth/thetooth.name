@@ -1,0 +1,30 @@
+workspace:
+  base: /go
+  path: src/github.com/thetooth/test
+
+pipeline:
+  dep:
+    image: golang:1.8
+    commands:
+      - go get -u github.com/golang/dep/cmd/dep
+      - /go/bin/dep ensure -v
+
+  build:
+    image: golang:1.8
+    commands:
+      - go build -o gateway cmd/gateway/main.go
+
+  publish:
+    image: plugins/docker
+    repo: thetooth/thetooth.name
+    secrets: [ docker_username, docker_password ]
+    when:
+      branch: master
+      event: push
+
+  deploy-staging:
+    image: thetooth/drone-ansible:latest
+    inventory: staging
+    secrets: [ ssh_key ]
+    when:
+      branch: master

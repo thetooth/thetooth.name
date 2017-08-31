@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  tasks:
+    - name: Deploy thetooth.name
+      docker_container:
+        name: thetooth-name
+        image: thetooth/thetooth.name:latest
+        recreate: yes
+        state: started
+        pull: yes
+        ports:
+          - "0.0.0.0:5050:5050"
