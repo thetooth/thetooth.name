@@ -17,7 +17,7 @@ pipeline:
   publish:
     image: plugins/docker
     repo: thetooth/thetooth.name
-    secrets: [ docker_email, docker_password ]
+    secrets: [ docker_username, docker_email, docker_password ]
     when:
       branch: master
       event: push
