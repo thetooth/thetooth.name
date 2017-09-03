@@ -31,12 +31,15 @@ import (
 
 	fsnotify "gopkg.in/fsnotify.v1"
 
+	"github.com/pkg/profile"
 	"github.com/sirupsen/logrus"
 	"github.com/thetooth/thetooth.name/gallery"
 	"github.com/thetooth/thetooth.name/handlers/home"
 )
 
 func main() {
+	defer profile.Start(profile.ProfilePath("."), profile.MemProfile).Stop()
+
 	logrus.SetLevel(logrus.DebugLevel)
 	logrus.Info("thetooth.name starting up...")
 

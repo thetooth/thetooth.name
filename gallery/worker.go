@@ -10,8 +10,6 @@ import (
 	"path"
 	"runtime/debug"
 
-	"golang.org/x/image/vp8"
-
 	"github.com/nfnt/resize"
 	"github.com/sirupsen/logrus"
 )
@@ -101,18 +99,36 @@ func (w Worker) Start() {
 				var thumb image.Image
 				switch path.Ext(work.Src) {
 				case ".jpg", ".jpeg":
+					cfg, _ := jpeg.DecodeConfig(file)
+					if cfg.Width > 6000 || cfg.Height > 6000 {
+						err = errors.New("Image is too large")
+						break
+					}
+					file.Seek(0, 0)
 					source, err = jpeg.Decode(file)
 					break
 				case ".png":
+					cfg, _ := png.DecodeConfig(file)
+					if cfg.Width > 6000 || cfg.Height > 6000 {
+						err = errors.New("Image is too large")
+						break
+					}
+					file.Seek(0, 0)
 					source, err = png.Decode(file)
 					break
 				case ".gif":
+					cfg, _ := gif.DecodeConfig(file)
+					if cfg.Width > 6000 || cfg.Height > 6000 {
+						err = errors.New("Image is too large")
+						break
+					}
+					file.Seek(0, 0)
 					source, err = gif.Decode(file)
 					break
-				case ".webm":
-					dec := vp8.NewDecoder()
-					dec.Init(file, 1024768)
-					source, err = dec.DecodeFrame()
+				// case ".webm":
+				// 	dec := vp8.NewDecoder()
+				// 	dec.Init(file, 1024768)
+				// 	source, err = dec.DecodeFrame()
 				default:
 					err = errors.New("Invalid format " + path.Ext(work.Src))
 				}
