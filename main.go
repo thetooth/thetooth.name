@@ -48,6 +48,9 @@ func main() {
 		logrus.Fatal(err)
 	}
 
+	// Start making thumbnails right away
+	gallery.Update()
+
 	// Process events
 	go func() {
 		for {
