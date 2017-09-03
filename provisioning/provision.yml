@@ -11,3 +11,7 @@
         pull: yes
         ports:
           - "0.0.0.0:9101:9000"
+        volumes:
+          - /home/thetooth/public_html/images:/opt/thetooth.name/images:ro
+          - /home/thetooth/public_html/images/thumbs:/opt/thetooth.name/images/thumbs:rw
+          - /home/thetooth/public_html/tmp:/opt/thetooth.name/tmp:ro
