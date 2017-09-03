@@ -37,6 +37,7 @@ import (
 )
 
 func main() {
+	logrus.SetLevel(logrus.DebugLevel)
 	logrus.Info("thetooth.name starting up...")
 
 	// Start workers
