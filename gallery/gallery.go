@@ -53,7 +53,7 @@ func Update() error {
 	}
 
 	// Generate thumbnails
-	images := make([]Image, 0)
+	images := make([]Image, len(filteredFileList))
 	for _, f := range filteredFileList {
 		images = append(images, createThumbnail(f))
 	}
