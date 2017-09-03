@@ -1,4 +1,4 @@
-package worker
+package gallery
 
 import (
 	"errors"
@@ -6,16 +6,14 @@ import (
 	"image/gif"
 	"image/jpeg"
 	"image/png"
-	"log"
 	"os"
 	"path"
 	"runtime/debug"
-	"sync"
-	"time"
 
 	"golang.org/x/image/vp8"
 
 	"github.com/nfnt/resize"
+	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -23,17 +21,7 @@ var (
 	WorkerQueue chan chan WorkRequest
 	// WorkQueue channel
 	WorkQueue = make(chan WorkRequest, 100)
-	// WorkList wait group
-	WorkList sync.WaitGroup
-	// ImageDir const
-	ImageDir = "images/"
 )
-
-// WorkStatus handle
-type WorkStatus struct {
-	start time.Time
-	work  WorkRequest
-}
 
 // WorkRequest to be exported to json
 type WorkRequest struct {
@@ -70,7 +58,7 @@ func StartDispatcher(nworkers int) {
 
 	// Now, create all of our workers.
 	for i := 0; i < nworkers; i++ {
-		log.Println("Starting worker", i+1)
+		logrus.Info("Starting worker ", i+1)
 		worker := NewWorker(i+1, WorkerQueue)
 		worker.Start()
 	}
@@ -79,11 +67,11 @@ func StartDispatcher(nworkers int) {
 		for {
 			select {
 			case work := <-WorkQueue:
-				log.Println("Received work requeust")
+				logrus.Debug("Received work requeust")
 				go func() {
 					worker := <-WorkerQueue
 
-					log.Println("Dispatching work request")
+					logrus.Debug("Dispatching work request")
 					worker <- work
 				}()
 			}
@@ -101,12 +89,11 @@ func (w Worker) Start() {
 			select {
 			case work := <-w.Work:
 				// Receive a work request.
-				log.Printf("Worker %d: Received work request, Generating thumbnail: %s", w.ID, work.Thumb)
+				logrus.Debugf("Worker %d: Received work request, Generating thumbnail: %s", w.ID, work.Thumb)
 
 				file, err := os.Open(ImageDir + work.Src)
-				defer file.Close()
 				if err != nil {
-					log.Println(err)
+					logrus.Error(err)
 					break
 				}
 
@@ -130,8 +117,10 @@ func (w Worker) Start() {
 					err = errors.New("Invalid format " + path.Ext(work.Src))
 				}
 
+				file.Close()
+
 				if err != nil {
-					log.Println(err)
+					logrus.Error(err)
 					thumb = image.NewRGBA(image.Rect(0, 0, 96, 96))
 				} else {
 					x := 0
@@ -144,19 +133,20 @@ func (w Worker) Start() {
 				}
 
 				out, err := os.Create(ImageDir + "thumbs/" + work.Thumb)
-				defer out.Close()
 				if err != nil {
-					log.Println(err)
+					logrus.Error(err)
 					break
 				}
 
 				png.Encode(out, thumb)
+				out.Close()
 
 				debug.FreeOSMemory()
+				break
 
 			case <-w.QuitChan:
 				// We have been asked to stop.
-				log.Printf("Worker %d stopping\n", w.ID)
+				logrus.Infof("Worker %d stopping\n", w.ID)
 				return
 			}
 		}

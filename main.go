@@ -27,18 +27,47 @@ package main
 */
 
 import (
-	"fmt"
 	"net/http"
 
+	fsnotify "gopkg.in/fsnotify.v1"
+
+	"github.com/sirupsen/logrus"
+	"github.com/thetooth/thetooth.name/gallery"
 	"github.com/thetooth/thetooth.name/handlers/home"
-	"github.com/thetooth/thetooth.name/worker"
 )
 
 func main() {
-	fmt.Printf("thetooth.name starting up... ")
+	logrus.Info("thetooth.name starting up...")
 
 	// Start workers
-	worker.StartDispatcher(4)
+	gallery.StartDispatcher(4)
+
+	// Start file system watcher for images
+	watcher, err := fsnotify.NewWatcher()
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
+	// Process events
+	go func() {
+		for {
+			select {
+			case <-watcher.Events:
+				logrus.Info("FS")
+				if err := gallery.Update(); err != nil {
+					logrus.Error(err)
+				}
+				logrus.Info("Updated gallery")
+			case err := <-watcher.Errors:
+				logrus.Error(err)
+			}
+		}
+	}()
+
+	err = watcher.Add(gallery.ImageDir)
+	if err != nil {
+		logrus.Fatal(err)
+	}
 
 	// Renderer
 	h := &home.Handler{}
@@ -46,10 +75,10 @@ func main() {
 	// Create mux
 	mux := http.NewServeMux()
 	mux.Handle("/", h)
-	mux.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir(worker.ImageDir))))
+	mux.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir(gallery.ImageDir))))
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
 	mux.Handle("/tmp/", http.StripPrefix("/tmp/", http.FileServer(http.Dir("tmp/"))))
 
-	fmt.Println("listening!")
+	logrus.Info("Listening")
 	http.ListenAndServe("0.0.0.0:9000", mux)
 }

@@ -29,27 +29,16 @@ package home
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
-	"net/url"
-	"os"
-	"path"
-	"sort"
 	"strconv"
 	"text/template"
 
-	"github.com/thetooth/thetooth.name/worker"
+	"github.com/sirupsen/logrus"
+	"github.com/thetooth/thetooth.name/gallery"
 )
 
 // Handler type
 type Handler struct{}
-
-// Image type
-type Image struct {
-	Thumb string
-	Src   string
-	Valid bool
-}
 
 // Pagination type
 type Pagination struct {
@@ -62,15 +51,9 @@ type Pagination struct {
 type Page struct {
 	Title      string
 	Debug      string
-	Gallery    []Image
+	Gallery    []gallery.Image
 	Pagination Pagination
 }
-
-type byModTime []os.FileInfo
-
-func (f byModTime) Len() int           { return len(f) }
-func (f byModTime) Less(i, j int) bool { return f[i].ModTime().Unix() > f[j].ModTime().Unix() }
-func (f byModTime) Swap(i, j int)      { f[i], f[j] = f[j], f[i] }
 
 // ListPages generates pagination
 func (p Pagination) ListPages() string {
@@ -95,34 +78,10 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // Get Handler
 func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 
-	var p = new(Page)
-	p.Title = "thetooth.name"
+	p := Page{Title: "thetooth.name"}
 
-	d, err := os.Open(worker.ImageDir)
-	if err != nil {
-		log.Println(err)
-		os.Exit(1)
-	}
-	fi, err := d.Readdir(-1)
-	if err != nil {
-		log.Println(err)
-		os.Exit(1)
-	}
-
-	sort.Sort(byModTime(fi))
-
-	var filteredFileList []os.FileInfo
-	for _, v := range fi {
-		if !v.IsDir() {
-			switch path.Ext(v.Name()) {
-			case ".jpg", ".jpeg", ".png", ".gif", ".webm":
-				filteredFileList = append(filteredFileList, v)
-				break
-			}
-		}
-	}
-
-	var itemsPerPage = 140
+	itemsPerPage := 140
+	images := gallery.Images.Load().([]gallery.Image)
 
 	// Get offset from query
 	offset, err := strconv.Atoi(r.URL.Query().Get("offset"))
@@ -131,7 +90,7 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// FFL length
-	length := len(filteredFileList)
+	length := len(images)
 
 	// Slice index A
 	index := (offset - 1) * itemsPerPage
@@ -144,39 +103,17 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 	// Slice index B
 	end := min(index+itemsPerPage, remaining)
 
-	pageList := filteredFileList[index:end]
-
+	p.Gallery = images[index:end]
 	p.Pagination.Index = offset
 	p.Pagination.End = (length / itemsPerPage) + 1
 	p.Pagination.Size = length
-	p.Gallery = make([]Image, len(pageList))
-
-	for i, v := range pageList {
-		createThumbnail(p, i, v)
-	}
 
 	tmpl, _ := ioutil.ReadFile("template.html")
 	t, err := template.New("test").Parse(string(tmpl))
 	if err != nil {
-		log.Printf("[%s] ERROR", err)
+		logrus.Error(err)
 	}
 	t.Execute(w, p)
-}
-
-func createThumbnail(p *Page, i int, f os.FileInfo) {
-	resizeName := f.Name()[:(len(f.Name())-len(path.Ext(f.Name())))] + ".png"
-
-	_, err := os.Stat(worker.ImageDir + "thumbs/" + resizeName)
-	if os.IsNotExist(err) {
-		p.Gallery[i] = Image{"noimage.png", url.PathEscape(f.Name()), true}
-		work := worker.WorkRequest{
-			Src:   f.Name(),
-			Thumb: resizeName,
-		}
-		worker.WorkQueue <- work
-	} else {
-		p.Gallery[i] = Image{url.PathEscape(resizeName), url.PathEscape(f.Name()), true}
-	}
 }
 
 func min(x, y int) int {

@@ -8,14 +8,38 @@
   revision = "891127d8d1b52734debe1b3c3d7e747502b6c366"
 
 [[projects]]
+  name = "github.com/sirupsen/logrus"
+  packages = ["."]
+  revision = "f006c2ac4710855cf0f916dd6b77acf6b048dc6e"
+  version = "v1.0.3"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/crypto"
+  packages = ["ssh/terminal"]
+  revision = "81e90905daefcd6fd217b62423c0908922eadb30"
+
+[[projects]]
   branch = "master"
   name = "golang.org/x/image"
   packages = ["vp8"]
   revision = "426cfd8eeb6e08ab1932954e09e3c2cb2bc6e36d"
 
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sys"
+  packages = ["unix","windows"]
+  revision = "7ddbeae9ae08c6a06a59597f0c9edbc5ff2444ce"
+
+[[projects]]
+  name = "gopkg.in/fsnotify.v1"
+  packages = ["."]
+  revision = "629574ca2a5df945712d3079857300b5e4da0236"
+  version = "v1.4.2"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "8ef4f5c269b3cd34eec227ff7e6049c7a7ebcb113cf266232ad3bc69f87b5501"
+  inputs-digest = "44f2c88b232643492c228f58a93a1ccbea4b2e0f7eeea889286bc528d4a9b496"
   solver-name = "gps-cdcl"
   solver-version = 1
