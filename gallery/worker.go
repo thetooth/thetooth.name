@@ -18,7 +18,7 @@ var (
 	// WorkerQueue channel controller
 	WorkerQueue chan chan WorkRequest
 	// WorkQueue channel
-	WorkQueue = make(chan WorkRequest, 100)
+	WorkQueue = make(chan WorkRequest, 1) // Synchronous
 )
 
 // WorkRequest to be exported to json
