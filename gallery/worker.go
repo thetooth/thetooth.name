@@ -136,7 +136,7 @@ func (w Worker) Start() {
 
 				if err != nil {
 					logrus.Error(err)
-					thumb = image.NewRGBA(image.Rect(0, 0, 96, 96))
+					break
 				} else {
 					x := 0
 					y := 96
