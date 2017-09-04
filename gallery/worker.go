@@ -6,6 +6,7 @@ import (
 	"image/gif"
 	"image/jpeg"
 	"image/png"
+	"io"
 	"os"
 	"path"
 
@@ -98,36 +99,26 @@ func (w Worker) Start() {
 
 				switch path.Ext(work.Src) {
 				case ".jpg", ".jpeg":
-					cfg, _ := jpeg.DecodeConfig(file)
-					if cfg.Width > 6000 || cfg.Height > 6000 {
+					if !sizeCheck(jpeg.DecodeConfig, file) {
 						err = errors.New("Image is too large")
 						break
 					}
-					file.Seek(0, 0)
 					source, err = jpeg.Decode(file)
 					break
 				case ".png":
-					cfg, _ := png.DecodeConfig(file)
-					if cfg.Width > 6000 || cfg.Height > 6000 {
+					if !sizeCheck(png.DecodeConfig, file) {
 						err = errors.New("Image is too large")
 						break
 					}
-					file.Seek(0, 0)
 					source, err = png.Decode(file)
 					break
 				case ".gif":
-					cfg, _ := gif.DecodeConfig(file)
-					if cfg.Width > 6000 || cfg.Height > 6000 {
+					if !sizeCheck(gif.DecodeConfig, file) {
 						err = errors.New("Image is too large")
 						break
 					}
-					file.Seek(0, 0)
 					source, err = gif.Decode(file)
 					break
-				// case ".webm":
-				// 	dec := vp8.NewDecoder()
-				// 	dec.Init(file, 1024768)
-				// 	source, err = dec.DecodeFrame()
 				default:
 					err = errors.New("Invalid format " + path.Ext(work.Src))
 				}
@@ -144,7 +135,7 @@ func (w Worker) Start() {
 						x = 96
 						y = 0
 					}
-					thumb = resize.Resize(uint(x), uint(y), source, resize.Lanczos3)
+					thumb = resize.Resize(uint(x), uint(y), source, resize.NearestNeighbor)
 					source = nil
 				}
 
@@ -154,13 +145,13 @@ func (w Worker) Start() {
 					break
 				}
 
+				// Encode the thumbnail
 				png.Encode(out, thumb)
+
+				// Cleanup
 				thumb = nil
 				out.Close()
-
-				//debug.FreeOSMemory()
 				break
-
 			case <-w.QuitChan:
 				// We have been asked to stop.
 				logrus.Infof("Worker %d stopping\n", w.ID)
@@ -176,4 +167,14 @@ func (w Worker) Stop() {
 	go func() {
 		w.QuitChan <- true
 	}()
+}
+
+// Check image dimensions and rewind reader to the start
+func sizeCheck(f func(r io.Reader) (image.Config, error), file *os.File) bool {
+	cfg, _ := f(file)
+	if cfg.Width > 6000 || cfg.Height > 6000 {
+		return false
+	}
+	file.Seek(0, 0)
+	return true
 }

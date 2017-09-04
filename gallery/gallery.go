@@ -45,7 +45,7 @@ func Update() error {
 	for _, v := range fi {
 		if !v.IsDir() {
 			switch path.Ext(v.Name()) {
-			case ".jpg", ".jpeg", ".png", ".gif", ".webm":
+			case ".jpg", ".jpeg", ".png", ".gif":
 				filteredFileList = append(filteredFileList, v)
 				break
 			}
