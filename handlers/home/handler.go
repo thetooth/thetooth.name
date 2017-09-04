@@ -98,10 +98,9 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusTeapot), http.StatusTeapot)
 		return
 	}
-	remaining := length - index
 
 	// Slice index B
-	end := min(index+itemsPerPage, remaining)
+	end := min(index+itemsPerPage, length)
 
 	p.Gallery = images[index:end]
 	p.Pagination.Index = offset

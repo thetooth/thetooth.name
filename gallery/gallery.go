@@ -54,8 +54,8 @@ func Update() error {
 
 	// Generate thumbnails
 	images := make([]Image, len(filteredFileList))
-	for _, f := range filteredFileList {
-		images = append(images, createThumbnail(f))
+	for i, f := range filteredFileList {
+		images[i] = createThumbnail(f)
 	}
 
 	// Update the gallery
