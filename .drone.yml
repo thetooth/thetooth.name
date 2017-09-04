@@ -4,13 +4,13 @@ workspace:
 
 pipeline:
   dep:
-    image: golang:1.8
+    image: golang:1.9
     commands:
       - go get -u github.com/golang/dep/cmd/dep
       - /go/bin/dep ensure -v
 
   build:
-    image: golang:1.8
+    image: golang:1.9
     commands:
       - go build -o server main.go
 
