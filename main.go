@@ -28,6 +28,7 @@ package main
 
 import (
 	"net/http"
+	"runtime"
 
 	fsnotify "gopkg.in/fsnotify.v1"
 
@@ -40,11 +41,13 @@ import (
 func main() {
 	defer profile.Start(profile.ProfilePath("."), profile.MemProfile).Stop()
 
+	runtime.GOMAXPROCS(1)
+
 	logrus.SetLevel(logrus.DebugLevel)
 	logrus.Info("thetooth.name starting up...")
 
 	// Start workers
-	gallery.StartDispatcher(4)
+	gallery.StartDispatcher(2)
 
 	// Start file system watcher for images
 	watcher, err := fsnotify.NewWatcher()
