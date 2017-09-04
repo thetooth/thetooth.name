@@ -8,7 +8,6 @@ import (
 	"image/png"
 	"os"
 	"path"
-	"runtime/debug"
 
 	"github.com/nfnt/resize"
 	"github.com/sirupsen/logrus"
@@ -80,6 +79,8 @@ func StartDispatcher(nworkers int) {
 // Start the worker by starting a goroutine, that is an infinite "for-select" loop.
 func (w Worker) Start() {
 	go func() {
+		var source image.Image
+		var thumb image.Image
 		for {
 			// Add ourselves into the worker queue.
 			w.WorkerQueue <- w.Work
@@ -95,8 +96,6 @@ func (w Worker) Start() {
 					break
 				}
 
-				var source image.Image
-				var thumb image.Image
 				switch path.Ext(work.Src) {
 				case ".jpg", ".jpeg":
 					cfg, _ := jpeg.DecodeConfig(file)
@@ -146,6 +145,7 @@ func (w Worker) Start() {
 						y = 0
 					}
 					thumb = resize.Resize(uint(x), uint(y), source, resize.Lanczos3)
+					source = nil
 				}
 
 				out, err := os.Create(ImageDir + "thumbs/" + work.Thumb)
@@ -155,9 +155,10 @@ func (w Worker) Start() {
 				}
 
 				png.Encode(out, thumb)
+				thumb = nil
 				out.Close()
 
-				debug.FreeOSMemory()
+				//debug.FreeOSMemory()
 				break
 
 			case <-w.QuitChan:
