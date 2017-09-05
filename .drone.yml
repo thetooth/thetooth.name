@@ -27,7 +27,6 @@ pipeline:
     repo: thetooth/thetooth.name:prod
     secrets: [ docker_username, docker_email, docker_password ]
     when:
-      branch: master
       event: tag
 
   deploy-staging:
@@ -43,5 +42,4 @@ pipeline:
     inventory: prod
     secrets: [ ssh_key ]
     when:
-      branch: master
       event: tag
