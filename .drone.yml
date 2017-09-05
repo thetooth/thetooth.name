@@ -24,7 +24,8 @@ pipeline:
 
   publish-prod:
     image: plugins/docker
-    repo: thetooth/thetooth.name:prod
+    repo: thetooth/thetooth.name
+    tags: prod
     secrets: [ docker_username, docker_email, docker_password ]
     when:
       event: tag
