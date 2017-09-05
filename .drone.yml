@@ -14,7 +14,7 @@ pipeline:
     commands:
       - go build -o server main.go
 
-  publish:
+  publish-staging:
     image: plugins/docker
     repo: thetooth/thetooth.name
     secrets: [ docker_username, docker_email, docker_password ]
@@ -22,9 +22,26 @@ pipeline:
       branch: master
       event: push
 
+  publish-prod:
+    image: plugins/docker
+    repo: thetooth/thetooth.name:prod
+    secrets: [ docker_username, docker_email, docker_password ]
+    when:
+      branch: master
+      event: tag
+
   deploy-staging:
     image: thetooth/drone-ansible:latest
     inventory: staging
     secrets: [ ssh_key ]
     when:
       branch: master
+      event: push
+
+  deploy-prod:
+    image: thetooth/drone-ansible:latest
+    inventory: prod
+    secrets: [ ssh_key ]
+    when:
+      branch: master
+      event: tag
