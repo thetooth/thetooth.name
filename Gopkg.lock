@@ -2,10 +2,28 @@
 
 
 [[projects]]
+  name = "github.com/namsral/flag"
+  packages = ["."]
+  revision = "71ceffbeb0ba60fccc853971bb3ed4d7d90bfd04"
+  version = "v1.7.4-pre"
+
+[[projects]]
   branch = "master"
   name = "github.com/nfnt/resize"
   packages = ["."]
   revision = "891127d8d1b52734debe1b3c3d7e747502b6c366"
+
+[[projects]]
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
+
+[[projects]]
+  name = "github.com/pkg/profile"
+  packages = ["."]
+  revision = "5b67d428864e92711fcbd2f8629456121a56d91f"
+  version = "v1.2.1"
 
 [[projects]]
   name = "github.com/sirupsen/logrus"
@@ -18,12 +36,6 @@
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
   revision = "81e90905daefcd6fd217b62423c0908922eadb30"
-
-[[projects]]
-  branch = "master"
-  name = "golang.org/x/image"
-  packages = ["vp8"]
-  revision = "426cfd8eeb6e08ab1932954e09e3c2cb2bc6e36d"
 
 [[projects]]
   branch = "master"
@@ -40,6 +52,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "44f2c88b232643492c228f58a93a1ccbea4b2e0f7eeea889286bc528d4a9b496"
+  inputs-digest = "d5a20078677dd94d1c8a5f2cbf6ba74add7983406a15314a00ea0f27d0fad0b3"
   solver-name = "gps-cdcl"
   solver-version = 1

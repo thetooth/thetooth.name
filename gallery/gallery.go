@@ -11,8 +11,9 @@ import (
 // Images atomic global, stores a type of []Image
 var Images atomic.Value
 
-// ImageDir const
-var ImageDir = "images/"
+// ImageDir, where you keep images.
+// Needs write permissions on `thumbs` subdirectory
+var ImageDir string
 
 // Image type
 type Image struct {

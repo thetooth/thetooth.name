@@ -30,13 +30,21 @@ import (
 	"net/http"
 	"runtime"
 
+	"github.com/namsral/flag"
+
 	fsnotify "gopkg.in/fsnotify.v1"
 
+	"github.com/pkg/errors"
 	"github.com/pkg/profile"
 	"github.com/sirupsen/logrus"
 	"github.com/thetooth/thetooth.name/gallery"
 	"github.com/thetooth/thetooth.name/handlers/home"
 )
+
+func init() {
+	flag.StringVar(&gallery.ImageDir, "image_dir", "images/", "Where you keep images")
+	flag.Parse()
+}
 
 func main() {
 	defer profile.Start(profile.ProfilePath("."), profile.MemProfile).Stop()
@@ -76,7 +84,7 @@ func main() {
 
 	err = watcher.Add(gallery.ImageDir)
 	if err != nil {
-		logrus.Fatal(err)
+		logrus.Fatal(errors.Wrapf(err, "fsnotify \"%s\"", gallery.ImageDir))
 	}
 
 	// Renderer
