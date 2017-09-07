@@ -11,6 +11,8 @@
         pull: yes
         ports:
           - "0.0.0.0:9101:9000"
+        env:
+          IMAGE_DIR: /opt/thetooth.name/images/
         volumes:
           - /home/thetooth/public_html/images:/opt/thetooth.name/images:ro
           - /home/thetooth/public_html/images/thumbs:/opt/thetooth.name/images/thumbs:rw
@@ -26,6 +28,7 @@
         exposed_ports:
           - 9000
         env:
+          IMAGE_DIR: /opt/thetooth.name/images/
           VIRTUAL_HOST: thetooth.name
           VIRTUAL_PORT: 9000
         volumes:
