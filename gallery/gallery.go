@@ -8,10 +8,10 @@ import (
 	"sync/atomic"
 )
 
-// Images atomic global, stores a type of []Image
+// Images atomic global, stores a []Image for retrieval
 var Images atomic.Value
 
-// ImageDir, where you keep images.
+// ImageDir is where you keep your images.
 // Needs write permissions on `thumbs` subdirectory
 var ImageDir string
 

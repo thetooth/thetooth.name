@@ -1,5 +1,5 @@
 # thetooth.name
-[![GoDoc](https://godoc.org/github.com/thetooth/thetooth.name?status.svg)](https://godoc.org/github.com/thetooth/thetooth.name) [![Build Status](https://ci.ameoto.com/api/badges/thetooth/thetooth.name/status.svg)](https://ci.ameoto.com/thetooth/thetooth.name) 💩
+[![GoDoc](https://godoc.org/github.com/thetooth/thetooth.name?status.svg)](https://godoc.org/github.com/thetooth/thetooth.name) [![Build Status](https://ci.ameoto.com/api/badges/thetooth/thetooth.name/status.svg)](https://ci.ameoto.com/thetooth/thetooth.name) [![Go Report Card](https://goreportcard.com/badge/github.com/thetooth/thetooth.name)](https://goreportcard.com/report/github.com/thetooth/thetooth.name) 💩
 
 Open source 12 factor personal blog
 
