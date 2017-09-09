@@ -7,11 +7,9 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" href="static/style.css" />
-  <link rel="stylesheet" href="static/highlight.js/styles/ascetic.css" />
-  <script type="text/javascript" src="static/highlight.js/highlight.pack.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow-night-blue.min.css" />
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script type="text/javascript">
-    hljs.initHighlightingOnLoad();
-
     function toggle_visibility(id) {
       var e = document.getElementById(id);
       if (e.style.display == 'block') {
@@ -28,11 +26,14 @@
       });
       return vars;
     }
+
     window.onload = function () {
       if (typeof getUrlVars()["offset"] !== 'undefined') {
         toggle_visibility('gallery');
       }
     }
+
+    hljs.initHighlightingOnLoad();
   </script>
 </head>
 
@@ -80,14 +81,14 @@
       <h2>Building</h2>
       <p>Luckily the BMP firmware has few dependencies and the ones it has are submodules with the make file doing all the work
         (´ ・ω・` )</p>
-      <pre>git clone git@github.com:blacksphere/blackmagic.git
+      <pre><code class="shell">git clone git@github.com:blacksphere/blackmagic.git
 cd blackmagic
 git submodule init
 git submodule update
 make
 cd src
 make clean
-make PROBE_HOST=stlink</pre>
+make PROBE_HOST=stlink</code></pre>
       <p>You shouldn't get any warnings or errors and have two new files: blackmagic.bin and blackmagic_dfu.bin</p>
       <h2>ST Link V2 SWD header</h2>
       <p>You'll want to solder a header to CN1 on your target debugger, the pin out is provided below.</p>
@@ -97,10 +98,10 @@ make PROBE_HOST=stlink</pre>
       <h2>Flashing</h2>
       <p>To flash we need to use either the official ST tool or a combination of <a href="https://github.com/texane/stlink">texane stlink util</a>        to do a full erase and <a href="http://openocd.org/">OpenOCD</a> to unlock the flash region. Neither of these tools
         will be used after flashing is complete.</p>
-      <pre>openocd -f interface/stlink-v2.cfg -f target/stm32f1x_stlink.cfg -c "init" -c "halt" -c "stm32f1x unlock 0" -c "shutdown"
+      <pre><code class="shell">openocd -f interface/stlink-v2.cfg -f target/stm32f1x_stlink.cfg -c "init" -c "halt" -c "stm32f1x unlock 0" -c "shutdown"
 st-flash erase
 st-flash --reset write blackmagic.bin 0x8002000
-st-flash write blackmagic_dfu.bin 0x8000000</pre>
+st-flash write blackmagic_dfu.bin 0x8000000</code></pre>
       <p>If any of the flashing steps fails, remember we don't have a NRST signal so you'll need to manually reset the device.</p>
       <p>If all went well you can now connect the debugger via USB and you'll see two new devices under /dev/. The first is
         the debug target itself, the second is a serial port we can use to communicate with the target.</p>
@@ -172,7 +173,38 @@ st-flash write blackmagic_dfu.bin 0x8000000</pre>
       <p><span style="color: #0070C0">VLAN1</span> and <span style="color: #F59D56">2</span>, which is part of the Trust zone
         consists of a IPv4 inbound services policy and respective NAT, IPv6 uses a per server policy set. Inter-VLAN routing
         is provided for 1&lt;-&gt;2 access on a case by case basis through the firewall:</p>
-      <pre>from-zone untrust to-zone trust {<br>    policy trust-services {<br>        match {<br>            source-address any-ipv4;<br>            destination-address any-ipv4;<br>            application [ junos-http junos-https junos-sip junos-ping softether junos-ssh ];<br>        }<br>        then {<br>            permit;<br>        }<br>    }<br>    policy icmp-v6 {<br>        match {<br>            source-address any-ipv6;<br>            destination-address any-ipv6;<br>            application junos-icmp6-all;<br>        }<br>        then {<br>            permit;<br>        }<br>    }<br>    policy trust-services-2001_470_24_869_1 {<br>        match {<br>            source-address any-ipv6;<br>            destination-address Vincent;<br>            application [ junos-http junos-ssh ];<br>        }<br>        then {<br>            permit;<br>        }<br>    }                                   <br>}</pre>
+      <pre><code class="json">from-zone untrust to-zone trust {
+    policy trust-services {
+        match {
+            source-address any-ipv4;
+            destination-address any-ipv4;
+            application [ junos-http junos-https junos-sip junos-ping softether junos-ssh ];
+        }
+        then {
+            permit;
+        }
+    }
+    policy icmp-v6 {
+        match {
+            source-address any-ipv6;
+            destination-address any-ipv6;
+            application junos-icmp6-all;
+        }
+        then {
+            permit;
+        }
+    }
+    policy trust-services-2001_470_24_869_1 {
+        match {
+            source-address any-ipv6;
+            destination-address Vincent;
+            application [ junos-http junos-ssh ];
+        }
+        then {
+            permit;
+        }
+    }                                   
+}</code></pre>
       <p><span style="color: #9DBB61">VLAN3</span> carries only VoIP traffic.</p>
       <p>Lastly the usual barrage of DoS and brute force attacks from the Internet are dealt with using a screening filter.
         RPF is enabled on all interfaces with an exception for DHCPv4 broadcasts.</p>

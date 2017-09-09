@@ -1,14 +1,56 @@
 @import url(https://fonts.googleapis.com/css?family=Monda:400,700|Source+Code+Pro);
+html,
 body {
-	padding: 20px;
-	font: 14px/1.5 'Monda', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-	color: #464646;
+	margin: 0;
+	padding: 0;
+}
+
+@media (min-width: 320px) {
+	html {
+		font-size: 2vw;
+	}
+	body {
+		margin-left: auto;
+		margin-right: auto;
+		width: 95%;
+	}
+}
+
+@media (min-width: 768px) {
+	body {
+		width: 90%;
+	}
+}
+
+@media (min-width: 1200px) {
+	html {
+		font-size: 1.5vmin;
+	}
+	body {
+		padding: 0;
+		max-width: 65%;
+	}
+}
+
+@media (min-width: 1600px) {
+	html {
+		font-size: 1vmin;
+	}
+}
+
+body {
+	font: 1.5em/1.5 'Monda', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	font-weight: 300;
+	color: #464646;
 }
 
 footer {
 	font-size: 1.1em;
 	color: #333;
+}
+
+img {
+	max-width: 100%;
 }
 
 #status {
@@ -26,11 +68,9 @@ footer {
 }
 
 #content {
-	width: 250mm;
-	margin-right: auto;
-	margin-left: auto;
-	margin-top: 30px;
-	margin-bottom: 30px;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	overflow-wrap: break-word;
 }
 
 #content table .header {
@@ -73,7 +113,7 @@ footer {
 	background-color: #080816;
 	color: #97CEEC;
 	display: inline;
-	line-height: 48px;
+	line-height: 2.3em;
 	padding-left: 8px;
 	padding-right: 8px;
 	padding-bottom: inherit;
@@ -113,16 +153,11 @@ blockquote {
 code,
 pre {
 	font-family: 'Source Code Pro', Monaco, Bitstream Vera Sans Mono, Lucida Console, Terminal;
-	color: #333;
-	font-size: 12px;
+	font-size: 1em;
 }
 
 pre {
-	padding: 8px 15px;
-	background: #f8f8f8;
-	border-radius: 3px;
-	border: 1px solid #e5e5e5;
-	overflow-x: auto;
+	overflow-x: hidden;
 }
 
 .thumb {
@@ -227,7 +262,7 @@ pre {
 }
 
 .splash {
-	width: 250mm;
+	width: 100%;
 	border-bottom-width: 4px;
 	border-bottom-style: solid;
 	border-bottom-color: rgba(0, 0, 0, 0.1);
@@ -239,14 +274,14 @@ pre {
 	color: #fff;
 	margin: 0;
 	margin-top: 3mm;
-	line-height: 32px;
 	padding-top: 0;
 	padding-bottom: 0;
-	padding-left: 8px;
+	padding-left: 1rem;
 	border-bottom-width: 4px;
 	border-bottom-style: solid;
 	border-bottom-color: #01BE98;
-	font-size: x-large;
+	font-size: 2em;
+	line-height: 1.3em;
 }
 
 #content blockquote {
