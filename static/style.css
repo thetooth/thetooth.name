@@ -7,7 +7,7 @@ body {
 
 @media (min-width: 320px) {
 	html {
-		font-size: 2vw;
+		font-size: 3vw;
 	}
 	body {
 		margin-left: auto;
@@ -53,24 +53,28 @@ img {
 	max-width: 100%;
 }
 
-#status {
-	display: none;
-	background-color: #FEE9CC;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	min-width: 64px;
-	text-align: center;
-	float: right;
-	clear: both;
-	padding-right: 4px;
-	padding-left: 4px;
+code {
+	font-family: 'Source Code Pro', Monaco, Bitstream Vera Sans Mono, Lucida Console, Terminal;
+	font-size: 1em;
+}
+
+pre {
+	overflow-x: hidden;
 }
 
 #content {
 	margin-top: 1em;
 	margin-bottom: 1em;
 	overflow-wrap: break-word;
+}
+
+#content a {
+	text-decoration: none;
+	color: #181845;
+}
+
+#content a:hover {
+	color: #97CEEC;
 }
 
 #content table .header {
@@ -100,15 +104,6 @@ img {
 	color: #666;
 }
 
-#content h1 {
-	font-size: 2.3em;
-	font-family: 'Monda', Helvetica, Arial, sans-serif;
-	line-height: 2.3em;
-	margin: 0px;
-	padding-bottom: 16px;
-	color: #222;
-}
-
 #content .title {
 	background-color: #080816;
 	color: #97CEEC;
@@ -119,6 +114,15 @@ img {
 	padding-bottom: inherit;
 }
 
+#content .title h1 {
+	font-size: 2.3em;
+	font-family: 'Monda', Helvetica, Arial, sans-serif;
+	line-height: 2.3em;
+	margin: 0px;
+	padding-bottom: 16px;
+	color: #222;
+}
+
 #content .titleLink {
 	color: #97CEEC;
 }
@@ -127,40 +131,51 @@ img {
 	text-shadow: 0px 0px 40px #97CEEC;
 }
 
-#content .sub {
-	display: inline-block;
-	background-color: #0077B5;
-	padding-left: 8px;
-	padding-right: 8px;
+#content section h1 {
+	display: block;
+	background-color: #02daaf;
+	color: #fff;
+	margin: 0;
+	margin-top: 3mm;
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-left: 1rem;
+	border-bottom-width: 4px;
+	border-bottom-style: solid;
+	border-bottom-color: #01BE98;
 }
 
-#content .sub a {
-	color: #F0F0F0;
+#content blockquote {
+	border-left: 1px solid #e5e5e5;
+	margin: 0;
+	padding: 0 0 0 1.5em;
+	font-style: italic;
 	font-weight: bold;
 }
 
-#content .sub a:hover {
-	color: #FFF;
+#content .fig {
+	font-size: small;
+	color: #666;
 }
 
-blockquote {
-	border-left: 1px solid #e5e5e5;
-	margin: 0;
-	padding: 0 0 0 20px;
-	font-style: italic;
+#content .splash {
+	width: 100%;
+	border-bottom-width: 4px;
+	border-bottom-style: solid;
+	border-bottom-color: rgba(0, 0, 0, 0.1);
 }
 
-code,
-pre {
-	font-family: 'Source Code Pro', Monaco, Bitstream Vera Sans Mono, Lucida Console, Terminal;
-	font-size: 1em;
+#content header .tiles a {
+	background-color: #F0F0F0;
+	padding: 8px;
+	display: inline-block;
+	margin-right: 4px;
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+	border-bottom-color: rgba(0, 0, 0, 0.1);
 }
 
-pre {
-	overflow-x: hidden;
-}
-
-.thumb {
+#gallery .thumb {
 	background-color: #F6F6F6;
 	display: inline-block;
 	width: 96px;
@@ -175,12 +190,12 @@ pre {
 	margin-left: 0px;
 }
 
-.thumb:hover {
+#gallery .thumb:hover {
 	background-color: #FFF;
 	border: 1px solid #97CEEC;
 }
 
-.thumb img {
+#gallery .thumb img {
 	display: inline-block;
 	vertical-align: middle;
 	max-height: 96px;
@@ -188,32 +203,21 @@ pre {
 	border: none;
 }
 
-.thumb img:hover {}
-
-.pagination {
+#gallery .pagination {
 	text-align: left;
 	font-size: x-small;
 }
 
-.pagination a,
-.current {
+#gallery .pagination a,
+#gallery .current {
 	border: 1px solid #E5E5E5;
 	margin-right: 2px;
 	padding: 2px 4px 2px 4px;
 	text-decoration: none;
 }
 
-.pagination a:hover {
+#gallery .pagination a:hover {
 	border: 1px solid #97CEEC;
-}
-
-#content a {
-	text-decoration: none;
-	color: #181845;
-}
-
-#content a:hover {
-	color: #97CEEC;
 }
 
 .secret {
@@ -249,42 +253,4 @@ pre {
 
 .secret a:hover .warning {
 	display: inline-block;
-}
-
-.tiles a {
-	background-color: #F0F0F0;
-	padding: 8px;
-	display: inline-block;
-	margin-right: 4px;
-	border-bottom-width: 2px;
-	border-bottom-style: solid;
-	border-bottom-color: rgba(0, 0, 0, 0.1);
-}
-
-.splash {
-	width: 100%;
-	border-bottom-width: 4px;
-	border-bottom-style: solid;
-	border-bottom-color: rgba(0, 0, 0, 0.1);
-}
-
-#content section h1 {
-	display: block;
-	background-color: #02daaf;
-	color: #fff;
-	margin: 0;
-	margin-top: 3mm;
-	padding-top: 0;
-	padding-bottom: 0;
-	padding-left: 1rem;
-	border-bottom-width: 4px;
-	border-bottom-style: solid;
-	border-bottom-color: #01BE98;
-	font-size: 2em;
-	line-height: 1.3em;
-}
-
-#content blockquote {
-	font-size: 12px;
-	font-weight: bold;
 }
