@@ -44,7 +44,6 @@ func main() {
 		for {
 			select {
 			case <-watcher.Events:
-				logrus.Info("FS")
 				if err := gallery.Update(); err != nil {
 					logrus.Error(err)
 				}
