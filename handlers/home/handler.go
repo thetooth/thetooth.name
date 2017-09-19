@@ -1,24 +1,19 @@
 package home
 
 import (
-	"fmt"
-	"io/ioutil"
+	"html/template"
 	"net/http"
 	"strconv"
-	"text/template"
 
 	"github.com/sirupsen/logrus"
+
+	"github.com/pkg/errors"
 	"github.com/thetooth/thetooth.name/gallery"
 )
 
 // Handler type
-type Handler struct{}
-
-// Pagination type
-type Pagination struct {
-	Index int
-	End   int
-	Size  int
+type Handler struct {
+	tmpl *template.Template
 }
 
 // Page type
@@ -29,13 +24,13 @@ type Page struct {
 	Pagination Pagination
 }
 
-// ListPages generates pagination
-func (p Pagination) ListPages() string {
-	buff := ""
-	for i := 1; i < p.End; i++ {
-		buff = fmt.Sprintf("%s<a href=\"?offset=%d\">%d</a>", buff, i, i)
+// NewHandler for home page
+func NewHandler() (*Handler, error) {
+	t, err := template.New("test").ParseFiles("template.html")
+	if err != nil {
+		return nil, errors.Wrap(err, "Could not load template.html")
 	}
-	return buff
+	return &Handler{tmpl: t}, nil
 }
 
 // Satisfy http.Handler interface
@@ -81,12 +76,10 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 	p.Pagination.End = (length / itemsPerPage) + 1
 	p.Pagination.Size = length
 
-	tmpl, _ := ioutil.ReadFile("template.html")
-	t, err := template.New("test").Parse(string(tmpl))
-	if err != nil {
+	// Render page
+	if err := h.tmpl.ExecuteTemplate(w, "template.html", p); err != nil {
 		logrus.Error(err)
 	}
-	t.Execute(w, p)
 }
 
 func min(x, y int) int {

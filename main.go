@@ -9,7 +9,6 @@ import (
 	fsnotify "gopkg.in/fsnotify.v1"
 
 	"github.com/pkg/errors"
-	"github.com/pkg/profile"
 	"github.com/sirupsen/logrus"
 	"github.com/thetooth/thetooth.name/gallery"
 	"github.com/thetooth/thetooth.name/handlers/home"
@@ -21,7 +20,7 @@ func init() {
 }
 
 func main() {
-	defer profile.Start(profile.ProfilePath("."), profile.MemProfile).Stop()
+	//defer profile.Start(profile.ProfilePath("."), profile.MemProfile).Stop()
 
 	runtime.GOMAXPROCS(1)
 
@@ -62,7 +61,10 @@ func main() {
 	}
 
 	// Renderer
-	h := &home.Handler{}
+	h, err := home.NewHandler()
+	if err != nil {
+		logrus.Fatal(err)
+	}
 
 	// Create mux
 	mux := http.NewServeMux()
