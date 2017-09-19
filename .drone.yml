@@ -1,6 +1,6 @@
 workspace:
   base: /go
-  path: src/github.com/thetooth/test
+  path: src/github.com/thetooth/thetooth.name
 
 pipeline:
   dep:
