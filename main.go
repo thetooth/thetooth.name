@@ -27,9 +27,6 @@ func main() {
 	logrus.SetLevel(logrus.DebugLevel)
 	logrus.Info("thetooth.name starting up...")
 
-	// Start workers
-	gallery.StartDispatcher(2)
-
 	// Start file system watcher for images
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
@@ -37,19 +34,18 @@ func main() {
 	}
 
 	// Start making thumbnails right away
-	gallery.Update()
+	gallery.Images.Update()
 
 	// Process events
 	go func() {
 		for {
 			select {
 			case <-watcher.Events:
-				if err := gallery.Update(); err != nil {
+				if err := gallery.Images.Update(); err != nil {
 					logrus.Error(err)
 				}
-				logrus.Info("Updated gallery")
 			case err := <-watcher.Errors:
-				logrus.Error(err)
+				logrus.Warn(err)
 			}
 		}
 	}()

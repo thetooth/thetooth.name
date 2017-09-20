@@ -1,6 +1,9 @@
 package home
 
-import "fmt"
+import (
+	"fmt"
+	"html/template"
+)
 
 // Pagination type
 type Pagination struct {
@@ -10,10 +13,10 @@ type Pagination struct {
 }
 
 // ListPages generates pagination
-func (p Pagination) ListPages() string {
+func (p Pagination) ListPages() template.HTML {
 	buff := ""
 	for i := 1; i < p.End; i++ {
 		buff = fmt.Sprintf("%s<a href=\"?offset=%d\">%d</a>", buff, i, i)
 	}
-	return buff
+	return template.HTML(buff)
 }

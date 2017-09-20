@@ -50,7 +50,7 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 	p := Page{Title: "thetooth.name"}
 
 	itemsPerPage := 140
-	images := gallery.Images.Load().([]gallery.Image)
+	images := gallery.Images.List()
 
 	// Get offset from query
 	offset, err := strconv.Atoi(r.URL.Query().Get("offset"))
