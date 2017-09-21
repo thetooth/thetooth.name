@@ -71,12 +71,13 @@ func main() {
 
 	logrus.Info("Listening")
 	server := http.Server{
-		Addr:              "0.0.0.0:9000",
-		Handler:           mux,
-		ReadTimeout:       time.Second * 5,
+		Addr:    "0.0.0.0:9000",
+		Handler: mux,
+
 		ReadHeaderTimeout: time.Second,
-		IdleTimeout:       time.Second,
+		ReadTimeout:       time.Second * 5,
 		WriteTimeout:      time.Second * 10,
+		IdleTimeout:       time.Second * 120,
 	}
 	server.ListenAndServe()
 }
