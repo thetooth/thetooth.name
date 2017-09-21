@@ -35,12 +35,17 @@ func NewHandler() (*Handler, error) {
 
 // Satisfy http.Handler interface
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case "GET":
-		// display page
-		h.Get(w, r)
+	select {
+	case <-r.Context().Done():
+		return
 	default:
-		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		switch r.Method {
+		case "GET":
+			// display page
+			h.Get(w, r)
+		default:
+			http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		}
 	}
 }
 

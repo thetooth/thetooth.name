@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"runtime"
+	"time"
 
 	"github.com/namsral/flag"
 
@@ -69,5 +70,13 @@ func main() {
 	mux.Handle("/tmp/", http.StripPrefix("/tmp/", http.FileServer(http.Dir("tmp/"))))
 
 	logrus.Info("Listening")
-	http.ListenAndServe("0.0.0.0:9000", mux)
+	server := http.Server{
+		Addr:              "0.0.0.0:9000",
+		Handler:           mux,
+		ReadTimeout:       time.Second * 5,
+		ReadHeaderTimeout: time.Second,
+		IdleTimeout:       time.Second,
+		WriteTimeout:      time.Second * 10,
+	}
+	server.ListenAndServe()
 }
