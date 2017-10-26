@@ -17,6 +17,7 @@ COPY --from=0 /go/src/github.com/thetooth/thetooth.name/static /opt/thetooth.nam
 COPY --from=0 /go/src/github.com/thetooth/thetooth.name/images /opt/thetooth.name/images
 COPY --from=0 /go/src/github.com/thetooth/thetooth.name/template.html /opt/thetooth.name/template.html
 COPY --from=0 /go/src/github.com/thetooth/thetooth.name/server /opt/thetooth.name/server
+RUN mkdir -p /opt/thetooth.name/images/thumbs
 RUN chmod 755 /opt/thetooth.name/server
 
 EXPOSE 9000
