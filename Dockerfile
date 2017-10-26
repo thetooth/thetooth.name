@@ -18,4 +18,5 @@ COPY --from=0 /go/src/github.com/thetooth/thetooth.name/template.html /opt/theto
 COPY --from=0 /go/src/github.com/thetooth/thetooth.name/server /opt/thetooth.name/server
 RUN chmod 755 /opt/thetooth.name/server
 
+EXPOSE 9000
 CMD ["./server"]
