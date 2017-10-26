@@ -14,6 +14,7 @@ MAINTAINER Jeffrey Jenner <thetooth@ameoto.com>
 WORKDIR "/opt/thetooth.name"
 
 COPY --from=0 /go/src/github.com/thetooth/thetooth.name/static /opt/thetooth.name/static
+COPY --from=0 /go/src/github.com/thetooth/thetooth.name/images /opt/thetooth.name/images
 COPY --from=0 /go/src/github.com/thetooth/thetooth.name/template.html /opt/thetooth.name/template.html
 COPY --from=0 /go/src/github.com/thetooth/thetooth.name/server /opt/thetooth.name/server
 RUN chmod 755 /opt/thetooth.name/server
