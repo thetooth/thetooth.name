@@ -7,4 +7,6 @@ COPY ./server /opt/thetooth.name/server
 RUN chmod 755 /opt/thetooth.name/server
 WORKDIR "/opt/thetooth.name"
 
+EXPOSE 9000
+
 CMD ["./server"]
