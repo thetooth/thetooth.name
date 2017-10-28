@@ -1,4 +1,4 @@
-job "cicd-poc" {
+job "thetooth.name" {
   datacenters = ["dc1"]
   type = "service"
 
@@ -7,7 +7,7 @@ job "cicd-poc" {
     max_parallel = 1
   }
 
-  group "poc-service" {
+  group "thetooth.name-service" {
     count = 1
     ephemeral_disk {
       size = 32
@@ -20,7 +20,7 @@ job "cicd-poc" {
       mode = "delay"
     }
 
-    task "poc-server" {
+    task "thetooth.name-server" {
       driver = "docker"
       config {
         image = "thetooth/thetooth.name:latest"
@@ -28,7 +28,7 @@ job "cicd-poc" {
       }
 
       service { # consul service checks
-        name = "poc-server"
+        name = "thetooth.name"
         tags = ["http"]
         port = "http"
         check {
